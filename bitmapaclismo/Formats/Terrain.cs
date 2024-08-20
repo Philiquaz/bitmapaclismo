@@ -36,7 +36,7 @@ namespace bitmapaclismo
         byte[] resourcesData;
         int groundTypeSize;
         byte[] groundTypeData;
-        byte[] unk10;
+        byte[] monsterZoneData;
 
         public Terrain(ByteReader data)
         {
@@ -58,7 +58,7 @@ namespace bitmapaclismo
             resourcesData = data.readBytes(resourcesSize);
             groundTypeSize = data.readInt();
             groundTypeData = data.readBytes(groundTypeSize);
-            unk10 = data.readBytes(-1);
+            monsterZoneData = data.readBytes(-1);
         }
 
         public Terrain(Terrain defaults, String newName, int x, int y, int z)
@@ -82,7 +82,7 @@ namespace bitmapaclismo
             resourcesData = new byte[resourcesSize];
             groundTypeSize = sizeX * sizeY;
             groundTypeData = new byte[groundTypeSize];
-            unk10 = defaults.unk10;
+            monsterZoneData = defaults.monsterZoneData;
         }
 
         public bool Validate()
