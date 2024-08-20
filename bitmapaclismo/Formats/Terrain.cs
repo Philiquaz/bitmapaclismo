@@ -2,6 +2,20 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace bitmapaclismo
 {
+    enum ResourceType : byte
+    {
+        Empty = 0,
+        Wood = 2,
+        Stone = 1,
+        Mineral = 3,
+        Debris = 5
+
+    }
+    enum GroundType : byte
+    {
+        Normal = 0,
+        Grime = 1
+    }
     class Terrain
     {
         byte[] unk1; // 17 in first byte
@@ -16,12 +30,12 @@ namespace bitmapaclismo
         int unk6; // 5
         int heightSize;
         int[] heightData;
-        int unk7Size;
-        int[] unk7Data;
-        int unk8Size;
-        byte[] unk8Data;
-        int unk9Size;
-        byte[] unk9Data;
+        int mistSize;
+        int[] mistData;
+        int resourcesSize;
+        byte[] resourcesData;
+        int groundTypeSize;
+        byte[] groundTypeData;
         byte[] unk10;
 
         public Terrain(ByteReader data)
@@ -38,12 +52,12 @@ namespace bitmapaclismo
             unk6 = data.readInt();
             heightSize = data.readInt();
             heightData = data.readInts(heightSize);
-            unk7Size = data.readInt();
-            unk7Data = data.readInts(unk7Size);
-            unk8Size = data.readInt();
-            unk8Data = data.readBytes(unk8Size);
-            unk9Size = data.readInt();
-            unk9Data = data.readBytes(unk9Size);
+            mistSize = data.readInt();
+            mistData = data.readInts(mistSize);
+            resourcesSize = data.readInt();
+            resourcesData = data.readBytes(resourcesSize);
+            groundTypeSize = data.readInt();
+            groundTypeData = data.readBytes(groundTypeSize);
             unk10 = data.readBytes(-1);
         }
 
@@ -62,12 +76,12 @@ namespace bitmapaclismo
             unk6 = defaults.unk6;
             heightSize = sizeX * sizeY;
             heightData = new int[heightSize];
-            unk7Size = sizeX * sizeY;
-            unk7Data = new int[unk7Size];
-            unk8Size = sizeX * sizeY;
-            unk8Data = new byte[unk8Size];
-            unk9Size = sizeX * sizeY;
-            unk9Data = new byte[unk9Size];
+            mistSize = sizeX * sizeY;
+            mistData = new int[mistSize];
+            resourcesSize = sizeX * sizeY;
+            resourcesData = new byte[resourcesSize];
+            groundTypeSize = sizeX * sizeY;
+            groundTypeData = new byte[groundTypeSize];
             unk10 = defaults.unk10;
         }
 
@@ -99,17 +113,17 @@ namespace bitmapaclismo
                 return false;
             if (heightData.Length != heightSize)
                 return false;
-            if (unk7Size != sizeX * sizeY)
+            if (mistSize != sizeX * sizeY)
                 return false;
-            if (unk7Data.Length != unk7Size)
+            if (mistData.Length != mistSize)
                 return false;
-            if (unk8Size != sizeX * sizeY)
+            if (resourcesSize != sizeX * sizeY)
                 return false;
-            if (unk8Data.Length != unk8Size)
+            if (resourcesData.Length != resourcesSize)
                 return false;
-            if (unk9Size != sizeX * sizeY)
+            if (groundTypeSize != sizeX * sizeY)
                 return false;
-            if (unk9Data.Length != unk9Size)
+            if (groundTypeData.Length != groundTypeSize)
                 return false;
             return true;
         }
