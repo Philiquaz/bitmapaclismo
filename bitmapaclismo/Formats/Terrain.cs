@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Windows.Forms.VisualStyles;
 
 namespace bitmapaclismo
 {
@@ -36,7 +37,9 @@ namespace bitmapaclismo
         byte[] resourcesData;
         int groundTypeSize;
         byte[] groundTypeData;
-        byte[] monsterZoneData;
+        int monsterZoneCount;
+        MonsterZone[] monsterZones;
+        byte[] unk7 = new byte[16];
 
         public Terrain(ByteReader data)
         {
@@ -58,7 +61,13 @@ namespace bitmapaclismo
             resourcesData = data.readBytes(resourcesSize);
             groundTypeSize = data.readInt();
             groundTypeData = data.readBytes(groundTypeSize);
-            monsterZoneData = data.readBytes(-1);
+            monsterZoneCount = data.readInt();
+            monsterZones = new MonsterZone[monsterZoneCount];
+            for (int i=0; i < monsterZoneCount; i++)
+            {
+                monsterZones[i] = new MonsterZone(data);
+            }
+            unk7 = data.readBytes(16);
         }
 
         public Terrain(Terrain defaults, String newName, int x, int y, int z)
@@ -82,7 +91,14 @@ namespace bitmapaclismo
             resourcesData = new byte[resourcesSize];
             groundTypeSize = sizeX * sizeY;
             groundTypeData = new byte[groundTypeSize];
-            monsterZoneData = defaults.monsterZoneData;
+            monsterZoneCount = defaults.monsterZoneCount;
+            monsterZones = new MonsterZone[monsterZoneCount];
+            for (int i=0; i<monsterZoneCount; i++)
+            {
+                monsterZones[i] = defaults.monsterZones[i];
+            }
+            unk7 = new byte[defaults.unk7.Length];
+            defaults.unk7.CopyTo(unk7, 0);
         }
 
         public bool Validate()
@@ -125,11 +141,66 @@ namespace bitmapaclismo
                 return false;
             if (groundTypeData.Length != groundTypeSize)
                 return false;
+            if (monsterZoneCount < 0)
+                return false;
+            if (monsterZones.Length != monsterZoneCount)
+                return false;
+            for (int i=0; i<monsterZoneCount; i++)
+            {
+                if (!monsterZones[i].Validate(i))
+                    return false;
+            }
+            if (unk7.Length != 16)
+                return false;
             return true;
         }
         public ref int height(int x, int y)
         {
             return ref heightData[x * sizeY + y]; //arbitrary choice of y-major
+        }
+    }
+
+    public struct MonsterZone
+    {
+        byte unk1 = 7;
+        int id;
+        int posX; //0
+        int posZ; //1
+        int posY; //0
+        int sizeX; //1
+        int sizeZ; //5
+        int sizeY; //1
+        
+        public MonsterZone(ByteReader data)
+        {
+            unk1 = data.readByte();
+            id = data.readInt();
+            posX = data.readInt();
+            posZ = data.readInt();
+            posY = data.readInt();
+            sizeX = data.readInt();
+            sizeZ = data.readInt();
+            sizeY = data.readInt();
+        }
+        public bool Validate(int index)
+        {
+            if (unk1 != 7)
+                return false;
+            if (id != index)
+                return false;
+            if (posX < 0)
+                return false;
+            if (posZ < 0)
+                return false;
+            if (posY < 0)
+                return false;
+            if (sizeX < 0)
+                return false;
+            if (sizeZ != 5)
+                return false;
+            if (sizeY < 0)
+                return false;
+            return true;
         }
     }
 }

@@ -1,11 +1,16 @@
 using System.Data.SqlTypes;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Text;
 
 namespace bitmapaclismo
 {
     static class Util
     {
+        public static byte readByte(byte[] bytes, int address)
+        {
+            return bytes[address];
+        }
         public static byte[] readBytes(byte[] bytes, int address, int count)
         {
             return bytes.AsSpan(address, count).ToArray();
@@ -21,6 +26,10 @@ namespace bitmapaclismo
         public static String readString(byte[] bytes, int address, int length)
         {
            return Encoding.ASCII.GetString(bytes, address, length); // asserting ascii usage
+        }
+        public static void writeByte(byte[] bytes, int address, byte newByte)
+        {
+            bytes[address] = newByte;
         }
         public static void writeBytes(byte[] bytes, int address, byte[] newBytes)
         {
@@ -48,6 +57,12 @@ namespace bitmapaclismo
             ptr = 0;
             bytes = data;
         }
+        public byte readByte()
+        {
+            byte newByte = Util.readByte(bytes, ptr);
+            ptr += 1;
+            return newByte;
+        }
         public byte[] readBytes(int length)
         {
             if (length == -1) length = bytes.Length - ptr;
@@ -55,7 +70,8 @@ namespace bitmapaclismo
             ptr += length;
             return newBytes;
         }
-        public int readInt() {
+        public int readInt()
+        {
             int r = Util.readInt(bytes, ptr);
             ptr += 4;
             return r;
@@ -66,10 +82,15 @@ namespace bitmapaclismo
             ptr += length * 4;
             return newInts;
         }
-        public String readString(int length) {
+        public String readString(int length)
+        {
             String r = Util.readString(bytes, ptr, length);
             ptr += r.Length;
             return r;
+        }
+        public bool Finished()
+        {
+            return ptr == bytes.Length;
         }
     }
     public class ByteWriter
@@ -85,13 +106,20 @@ namespace bitmapaclismo
             if (size + addedLength >= bytes.Length)
                 Array.Resize(ref bytes, (int)(bytes.Length * 1.5 + 1));
         }
+        public void writeByte(byte newByte)
+        {
+            ensureNewCapacity(1);
+            Util.writeByte(bytes, size, newByte);
+            size += 1;
+        }
         public void writeBytes(byte[] newBytes)
         {
             ensureNewCapacity(newBytes.Length);
             Util.writeBytes(bytes, size, newBytes);
             size += newBytes.Length;
         }
-        public void writeInt(int value) {
+        public void writeInt(int value)
+        {
             ensureNewCapacity(4);
             Util.writeInt(bytes, size, value);
             size += 4;
@@ -102,10 +130,14 @@ namespace bitmapaclismo
             Util.writeInts(bytes, size, ints);
             size += ints.Length * 4;
         }
-        public void writeString(String str) {
+        public void writeString(String str)
+        {
             ensureNewCapacity(str.Length);
             Util.writeString(bytes, size, str);
             size += str.Length;
+        }
+        public byte[] GetBytes() {
+            return bytes.AsSpan(0, size).ToArray();
         }
     }
 }
