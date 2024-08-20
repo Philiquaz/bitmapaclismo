@@ -50,6 +50,7 @@ namespace bitmapaclismo
         }
         public byte[] readBytes(int length)
         {
+            if (length == -1) length = bytes.Length - ptr;
             byte[] newBytes = Util.readBytes(bytes, ptr, length);
             ptr += length;
             return newBytes;

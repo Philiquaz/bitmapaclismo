@@ -29,6 +29,12 @@ namespace bitmapaclismo
                 string fileName = Path.GetFileName(fbd.SelectedPath);
                 byte[] terrainBytes = File.ReadAllBytes($@"{fbd.SelectedPath}\terrain");
 
+                Terrain terrainFile = new Terrain(new ByteReader(terrainBytes));
+                if (!terrainFile.Validate())
+                {
+                    MessageBox.Show("Terrain file issue.");
+                }
+
                 int sizex = Util.readInt(terrainBytes, 0x1E -5 + fileName.Length);
                 int sizey = Util.readInt(terrainBytes, 0x22 -5 + fileName.Length);
                 int sizez = Util.readInt(terrainBytes, 0x26 -5 + fileName.Length);

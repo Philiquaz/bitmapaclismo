@@ -22,10 +22,7 @@ namespace bitmapaclismo
         byte[] unk8Data;
         int unk9Size;
         byte[] unk9Data;
-        int unk10; // 0
-        int unk11; // 0
-        int unk12; // 0
-        int unk13; // 0
+        byte[] unk10;
 
         public Terrain(ByteReader data)
         {
@@ -47,10 +44,7 @@ namespace bitmapaclismo
             unk8Data = data.readBytes(unk8Size);
             unk9Size = data.readInt();
             unk9Data = data.readBytes(unk9Size);
-            unk10 = data.readInt();
-            unk11 = data.readInt();
-            unk12 = data.readInt();
-            unk13 = data.readInt();
+            unk10 = data.readBytes(-1);
         }
 
         public Terrain(Terrain defaults, String newName, int x, int y, int z)
@@ -75,9 +69,6 @@ namespace bitmapaclismo
             unk9Size = sizeX * sizeY;
             unk9Data = new byte[unk9Size];
             unk10 = defaults.unk10;
-            unk11 = defaults.unk11;
-            unk12 = defaults.unk12;
-            unk13 = defaults.unk13;
         }
 
         public bool Validate()
@@ -119,14 +110,6 @@ namespace bitmapaclismo
             if (unk9Size != sizeX * sizeY)
                 return false;
             if (unk9Data.Length != unk9Size)
-                return false;
-            if (unk10 != 0)
-                return false;
-            if (unk11 != 0)
-                return false;
-            if (unk12 != 0)
-                return false;
-            if (unk13 != 0)
                 return false;
             return true;
         }
