@@ -95,6 +95,7 @@ namespace bitmapaclismo
             ByteWriter bw = new ByteWriter();
             terrain.Write(bw);
             File.WriteAllBytes($@"{folderPath}\terrain", bw.GetBytes());
+            MessageBox.Show("Complete.");
         }
         
         static void ConvertTerrainToBitmap(string folderPath, Terrain terrain)
@@ -133,6 +134,7 @@ namespace bitmapaclismo
                 }
             }
             bitmap.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+            MessageBox.Show("Complete.");
         }
     }
 }
