@@ -60,33 +60,20 @@ namespace bitmapaclismo
                 MessageBox.Show("Could not find bmp file specified");
                 return;
             }
-            byte[] heightMapBytes = File.ReadAllBytes(ofd.FileName);
+            Bitmap bitmap = new Bitmap(ofd.FileName);
 
             if (MessageBox.Show("Extend height to 255 because you want to break the game?", "", MessageBoxButtons.YesNo) == DialogResult.Yes) {
                 zRange = 255;
             }
 
-            int hMapStart = heightMapBytes.Length -1 - heightwidth*heightwidth*3;
             int terrainStart = 0x2d + fileName.Length;
-
-            int hMapCurrent = hMapStart;
             int terrainCurrent = terrainStart;
 
             for (int x=0; x<heightwidth; x++) {
                 for (int y=0; y<heightwidth; y++) {
-                    int pixelIndex = x*heightwidth+y;
-                    if (hMapCurrent != hMapStart + pixelIndex * 3) throw new Exception("the math didn't math");
-                    if (terrainCurrent != terrainStart + pixelIndex * 4) throw new Exception("the math didn't math");
-
-                    byte hMapValue = heightMapBytes[hMapCurrent];
-                    float adjustedValue = hMapValue / 255f;
-
-                    float filteredValue = adjustedValue;//(float)Math.Sqrt(adjustedValue) / 2; //I just wanted something nice when testing
-
-                    int result = (int)(filteredValue * zRange);
+                    byte hMapValue = bitmap.GetPixel(x, y).R;
+                    int result = (int)(hMapValue / 255f * zRange);
                     Util.writeInt(terrainBytes, terrainCurrent, result);
-
-                    hMapCurrent += 3;
                     terrainCurrent += 4;
                 }
             }
