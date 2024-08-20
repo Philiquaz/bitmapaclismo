@@ -78,7 +78,7 @@ namespace bitmapaclismo
 
                 if (MessageBox.Show("Bitmap is not size of map - map data will be wiped while clearing the map.", "", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                     return;
-                if (MessageBox.Show("Bitmap is not square. Border region will be a square based on bitmap's width.\nContinue?", "", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                if (bitmap.Width != bitmap.Height && MessageBox.Show("Bitmap is not square. Border region will be a square based on bitmap's width.\nContinue?", "", MessageBoxButtons.OKCancel) == DialogResult.Cancel)
                     return;
                 terrain = new Terrain(terrain, fileName, bitmap.Width, bitmap.Height, terrain.sizeZ);
             }
