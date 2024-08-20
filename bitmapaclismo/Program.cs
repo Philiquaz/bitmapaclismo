@@ -7,15 +7,6 @@ namespace bitmapaclismo
 {
     static class bitmapaclismo
     {
-        static int readInt(byte[] bytes, int address) {
-            return bytes[address] + (bytes[address + 1] << 8) + (bytes[address + 2] << 16) + (bytes[address + 3] << 24);
-        }
-        static void writeInt(byte[] bytes, int address, int value) {
-            bytes[address] = (byte)value;
-            bytes[address+1] = (byte)(value>>8);
-            bytes[address+2] = (byte)(value>>16);
-            bytes[address+3] = (byte)(value>>24);
-        }
         [STAThread]
         static void Main() {
             
@@ -37,11 +28,11 @@ namespace bitmapaclismo
                 string fileName = Path.GetFileName(fbd.SelectedPath);
                 byte[] terrainBytes = File.ReadAllBytes($@"{fbd.SelectedPath}\terrain");
 
-                int sizex = readInt(terrainBytes, 0x1E -5 + fileName.Length);
-                int sizey = readInt(terrainBytes, 0x22 -5 + fileName.Length);
-                int sizez = readInt(terrainBytes, 0x26 -5 + fileName.Length);
-                int sizeL = readInt(terrainBytes, 0x2A -5 + fileName.Length);
-                int totalSize = readInt(terrainBytes, 0x2E -5 + fileName.Length);
+                int sizex = Util.readInt(terrainBytes, 0x1E -5 + fileName.Length);
+                int sizey = Util.readInt(terrainBytes, 0x22 -5 + fileName.Length);
+                int sizez = Util.readInt(terrainBytes, 0x26 -5 + fileName.Length);
+                int sizeL = Util.readInt(terrainBytes, 0x2A -5 + fileName.Length);
+                int totalSize = Util.readInt(terrainBytes, 0x2E -5 + fileName.Length);
                 int heightwidth = (int)Math.Sqrt(totalSize); //use sqrt for only square map because idk braindamage
 
                 int zRange = 100; //Fixed
@@ -80,7 +71,7 @@ namespace bitmapaclismo
                         float filteredValue = adjustedValue;//(float)Math.Sqrt(adjustedValue) / 2; //I just wanted something nice when testing
 
                         int result = (int)(filteredValue * zRange);
-                        writeInt(terrainBytes, terrainCurrent, result);
+                        Util.writeInt(terrainBytes, terrainCurrent, result);
 
                         hMapCurrent += 3;
                         terrainCurrent += 4;
