@@ -86,7 +86,7 @@ namespace bitmapaclismo
             unk1 = new byte[defaults.unk1.Length];
             defaults.unk1.CopyTo(unk1, 0);
             antiNameLength = -1 - newName.Length;
-            antiNameLength = newName.Length;
+            nameLength = newName.Length;
             name = newName;
             unk4 = defaults.unk4;
             mapSize = defaults.mapSize;
