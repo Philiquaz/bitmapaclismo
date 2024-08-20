@@ -1,4 +1,9 @@
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms.VisualStyles;
 
 namespace bitmapaclismo
@@ -34,9 +39,9 @@ namespace bitmapaclismo
         int mistSize;
         int[] mistData;
         int resourcesSize;
-        byte[] resourcesData;
+        ResourceType[] resourcesData;
         int groundTypeSize;
-        byte[] groundTypeData;
+        GroundType[] groundTypeData;
         int monsterZoneCount;
         MonsterZone[] monsterZones;
         byte[] unk7 = new byte[16];
@@ -58,9 +63,9 @@ namespace bitmapaclismo
             mistSize = data.readInt();
             mistData = data.readInts(mistSize);
             resourcesSize = data.readInt();
-            resourcesData = data.readBytes(resourcesSize);
+            resourcesData = data.readEnumBytes<ResourceType>(resourcesSize);
             groundTypeSize = data.readInt();
-            groundTypeData = data.readBytes(groundTypeSize);
+            groundTypeData = data.readEnumBytes<GroundType>(groundTypeSize);
             monsterZoneCount = data.readInt();
             monsterZones = new MonsterZone[monsterZoneCount];
             for (int i=0; i < monsterZoneCount; i++)
@@ -88,9 +93,9 @@ namespace bitmapaclismo
             mistSize = sizeX * sizeY;
             mistData = new int[mistSize];
             resourcesSize = sizeX * sizeY;
-            resourcesData = new byte[resourcesSize];
+            resourcesData = new ResourceType[resourcesSize];
             groundTypeSize = sizeX * sizeY;
-            groundTypeData = new byte[groundTypeSize];
+            groundTypeData = new GroundType[groundTypeSize];
             monsterZoneCount = defaults.monsterZoneCount;
             monsterZones = new MonsterZone[monsterZoneCount];
             for (int i=0; i<monsterZoneCount; i++)
@@ -154,9 +159,26 @@ namespace bitmapaclismo
                 return false;
             return true;
         }
+
         public ref int height(int x, int y)
         {
             return ref heightData[x * sizeY + y]; //arbitrary choice of y-major
+        }
+        public ref int mist(int x, int y)
+        {
+            return ref mistData[x * sizeY + y];
+        }
+        public ref ResourceType resource(int x, int y)
+        {
+            return ref resourcesData[x * sizeY + y];
+        }
+        public ref GroundType groundType(int x, int y)
+        {
+            return ref groundTypeData[x * sizeY + y];
+        }
+        public ref MonsterZone MonsterZone(int i)
+        {
+            return ref monsterZones[i];
         }
     }
 
