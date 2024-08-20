@@ -85,8 +85,8 @@ namespace bitmapaclismo
         {
             unk1 = new byte[defaults.unk1.Length];
             defaults.unk1.CopyTo(unk1, 0);
-            antiNameLength = defaults.antiNameLength;
-            antiNameLength = defaults.nameLength;
+            antiNameLength = -1 - newName.Length;
+            antiNameLength = newName.Length;
             name = newName;
             unk4 = defaults.unk4;
             mapSize = defaults.mapSize;
@@ -110,6 +110,33 @@ namespace bitmapaclismo
             }
             unk7 = new byte[defaults.unk7.Length];
             defaults.unk7.CopyTo(unk7, 0);
+        }
+        public void Write(ByteWriter data)
+        {
+            data.writeBytes(unk1);
+            data.writeInt(antiNameLength);
+            data.writeInt(nameLength);
+            data.writeString(name);
+            data.writeInt(unk4);
+            data.writeInt((int)mapSize);
+            data.writeInt(sizeX);
+            data.writeInt(sizeY);
+            data.writeInt(sizeZ);
+            data.writeInt(unk6);
+            data.writeInt(heightSize);
+            data.writeInts(heightData);
+            data.writeInt(mistSize);
+            data.writeInts(mistData);
+            data.writeInt(resourcesSize);
+            data.writeEnumBytes<ResourceType>(resourcesData);
+            data.writeInt(groundTypeSize);
+            data.writeEnumBytes<GroundType>(groundTypeData);
+            data.writeInt(monsterZoneCount);
+            for (int i=0; i<monsterZoneCount; i++)
+            {
+                monsterZones[i].Write(data);
+            }
+            data.writeBytes(unk7);
         }
 
         public bool Validate()
@@ -209,6 +236,17 @@ namespace bitmapaclismo
             sizeX = data.readInt();
             sizeZ = data.readInt();
             sizeY = data.readInt();
+        }
+        public void Write(ByteWriter data)
+        {
+            data.writeByte(unk1);
+            data.writeInt(id);
+            data.writeInt(posX);
+            data.writeInt(posZ);
+            data.writeInt(posY);
+            data.writeInt(sizeX);
+            data.writeInt(sizeZ);
+            data.writeInt(sizeY);
         }
         public bool Validate(int index)
         {
