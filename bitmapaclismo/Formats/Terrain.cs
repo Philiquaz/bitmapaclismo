@@ -162,14 +162,16 @@ namespace bitmapaclismo
 
     public struct MonsterZone
     {
-        byte unk1 = 7;
+        //Who wrote this XZY when terrain file is XYZ? Or who wrote terrain file XZY when this is XYZ?
+        //For clarity, bitmapaclismo uses xy horizontally and z for height.
+        byte unk1;
         int id;
-        int posX; //0
-        int posZ; //1
-        int posY; //0
-        int sizeX; //1
-        int sizeZ; //5
-        int sizeY; //1
+        int posX;
+        int posZ;
+        int posY;
+        int sizeX;
+        int sizeZ;
+        int sizeY;
         
         public MonsterZone(ByteReader data)
         {
