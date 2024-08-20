@@ -8,6 +8,12 @@ using System.Windows.Forms.VisualStyles;
 
 namespace bitmapaclismo
 {
+    enum MapSize : int
+    {
+        Small = 20,
+        Medium = 30,
+        Large = 40,
+    }
     enum ResourceType : byte
     {
         Empty = 0,
@@ -29,7 +35,7 @@ namespace bitmapaclismo
         int nameLength;
         String name;
         int unk4; // 0
-        int unk5; // 40
+        MapSize mapSize;
         int sizeX;
         int sizeY;
         int sizeZ;
@@ -53,7 +59,7 @@ namespace bitmapaclismo
             nameLength = data.readInt();
             name = data.readString(nameLength);
             unk4 = data.readInt();
-            unk5 = data.readInt();
+            mapSize = (MapSize) data.readInt();
             sizeX = data.readInt();
             sizeY = data.readInt();
             sizeZ = data.readInt();
@@ -83,7 +89,7 @@ namespace bitmapaclismo
             antiNameLength = defaults.nameLength;
             name = newName;
             unk4 = defaults.unk4;
-            unk5 = defaults.unk5;
+            mapSize = defaults.mapSize;
             sizeX = x;
             sizeY = y;
             sizeZ = z;
@@ -119,8 +125,6 @@ namespace bitmapaclismo
             if (antiNameLength != -1 - nameLength)
                 return false;
             if (unk4 != 0)
-                return false;
-            if (unk5 != 40)
                 return false;
             if (sizeX <= 0)
                 return false;
