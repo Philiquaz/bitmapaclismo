@@ -36,9 +36,9 @@ namespace bitmapaclismo
         String name;
         int unk4; // 0
         MapSize mapSize;
-        int sizeX;
-        int sizeY;
-        int sizeZ;
+        public int sizeX;
+        public int sizeY;
+        public int sizeZ;
         int unk6; // 5
         int heightSize;
         int[] heightData;
