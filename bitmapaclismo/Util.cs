@@ -118,7 +118,7 @@ namespace bitmapaclismo
         private void ensureNewCapacity(int addedLength)
         {
             if (size + addedLength >= bytes.Length)
-                Array.Resize(ref bytes, (int)(bytes.Length * 1.5 + 1));
+                Array.Resize(ref bytes, (int)((size + addedLength) * 1.5 + 1));
         }
         public void writeByte(byte newByte)
         {
